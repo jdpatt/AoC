@@ -2,6 +2,7 @@
 
 all: python cpp
 
+
 python:
 	$(MAKE) -C python
 
