@@ -1,0 +1,6 @@
+python/.tox
+python/example/.mypy_cache
+python/example/.tox
+python/example/__pycache__
+python/venv
+python/.mypy_cache
