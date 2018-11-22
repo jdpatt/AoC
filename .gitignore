@@ -5,3 +5,5 @@ python/example/__pycache__
 python/venv
 python/.mypy_cache
 a.out
+cpp/build
+aoc.sublime-workspace
