@@ -29,10 +29,11 @@ def generate_checksum(potential_ids: Sequence[str]):
 
 def find_fabric_ids(potential_ids: Sequence[str]):
     """Find the two ids that are only off by one character."""
+    ratio = (len(potential_ids[0]) - 1) / len(potential_ids[0])
     for item_one in potential_ids:
         for item_two in potential_ids:
             seq = SequenceMatcher(None, item_one, item_two)
-            if seq.ratio() >= .96 and seq.ratio() != 1:
+            if seq.ratio() >= ratio and seq.ratio() != 1:
                 matches = seq.get_matching_blocks()
                 before = item_one[matches[0].a: matches[0].a + matches[0].size]
                 after = item_one[matches[1].a: matches[1].a + matches[1].size]
