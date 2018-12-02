@@ -7,3 +7,4 @@ python/.mypy_cache
 a.out
 cpp/build
 aoc.sublime-workspace
+aoc.sublime-project
