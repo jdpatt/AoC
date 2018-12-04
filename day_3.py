@@ -23,10 +23,12 @@ def is_overlapping(array, cord_x, cord_y, size_x, size_y):
 
 def find_nonoverlapping_claim(array):
     """Find the one element with no overlapping claims."""
-    with open("input.txt", "r") as input_text:
+    with open("input3.txt", "r") as input_text:
         for line in input_text:
             tag_id, cord_x, cord_y, size_x, size_y = split(r" @ |,|: |x", line)
-            if not is_overlapping(array, int(cord_x), int(cord_y), int(size_x), int(size_y)):
+            if not is_overlapping(
+                array, int(cord_x), int(cord_y), int(size_x), int(size_y)
+            ):
                 return tag_id
     raise ValueError("No Unique ID found.")
 
@@ -34,12 +36,14 @@ def find_nonoverlapping_claim(array):
 def generate_fabric_claims(width: int):
     """Generate the initial array based off the input of claims."""
     fabric = [[[] for x in range(width)] for i in range(width)]
-    with open("input.txt", "r") as input_text:
+    with open("input3.txt", "r") as input_text:
         for line in input_text:
             tag_id, cord_x, cord_y, size_x, size_y = split(r" @ |,|: |x", line)
             for x_offset in range(int(size_x)):
                 for y_offset in range(int(size_y)):
-                    fabric[int(cord_x) + x_offset][int(cord_y) + y_offset].append(tag_id)
+                    fabric[int(cord_x) + x_offset][int(cord_y) + y_offset].append(
+                        tag_id
+                    )
     return fabric
 
 

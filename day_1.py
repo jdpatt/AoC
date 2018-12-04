@@ -6,7 +6,7 @@ def device_calibration():
     """Calculate the final frequency drift after falling in time."""
     ops = {"+": operator.add, "-": operator.sub}
     frequency = 0
-    with open("input.txt", "r") as text:
+    with open("input1.txt", "r") as text:
         for line in text:
             function = ops[line[:1]]
             change = int(line[1:])
@@ -17,7 +17,7 @@ def device_calibration():
 def find_repeating_frequency():
     """Find the first frequency that repeats."""
     ops = {"+": operator.add, "-": operator.sub}
-    with open("input.txt", "r") as input_txt:
+    with open("input1.txt", "r") as input_txt:
         text = input_txt.readlines()
 
     frequency = 0
