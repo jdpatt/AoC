@@ -1,11 +1,3 @@
-python/.tox
-python/example/.mypy_cache
-python/example/.tox
-python/example/__pycache__
-python/venv
-python/.mypy_cache
-a.out
-cpp/build
 aoc.sublime-workspace
 aoc.sublime-project
-day_3/__pycache__
+__pycache__/
