@@ -1,39 +1,26 @@
 """Advent of Code 2018 Day 1"""
-import operator
+from common import get_puzzle_input
 
 
-def device_calibration():
+def device_calibration(frequencies):
     """Calculate the final frequency drift after falling in time."""
-    ops = {"+": operator.add, "-": operator.sub}
-    frequency = 0
-    with open("input1.txt", "r") as text:
-        for line in text:
-            function = ops[line[:1]]
-            change = int(line[1:])
-            frequency = function(frequency, change)
-        print(f"Final Frequency: {frequency}")
+    return sum(frequency for frequency in frequencies)
 
 
-def find_repeating_frequency():
+def find_repeating_frequency(frequencies):
     """Find the first frequency that repeats."""
-    ops = {"+": operator.add, "-": operator.sub}
-    with open("input1.txt", "r") as input_txt:
-        text = input_txt.readlines()
-
-    frequency = 0
-    results = set()
+    seen_frequencies = set()
+    current_freq = 0
     while True:
-        for line in text:
-            function = ops[line[:1]]
-            change = int(line[1:])
-            frequency = function(frequency, change)
-            if frequency not in results:
-                results.add(frequency)
+        for frequency in frequencies:
+            current_freq += frequency
+            if current_freq not in seen_frequencies:
+                seen_frequencies.add(current_freq)
             else:
-                print(f"First Repeated: {frequency}")
-                return
+                return current_freq
 
 
 if __name__ == "__main__":
-    device_calibration()
-    find_repeating_frequency()
+        frequencies = [int(x) for x in get_puzzle_input("input1.txt")]
+        print(f"Final Frequency: {device_calibration(frequencies)}")
+        print(f"First Repeated: {find_repeating_frequency(frequencies)}")
