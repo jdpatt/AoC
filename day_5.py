@@ -17,11 +17,29 @@ def reduce_polymer(polymer):
     return "".join(reduced)
 
 
+def remove_letter(text, letter):
+    """Remove both cases of the letter from the string."""
+    text = text.replace(letter, "")
+    text = text.replace(letter.swapcase(), "")
+    return text
+
+
+def optimize_polymer(polymer):
+    """Removing one type of unit; see how small the polymer can get."""
+    return min(
+        [
+            len(reduce_polymer(remove_letter(polymer, chr(x))))
+            for x in range(ord("a"), (ord("z") + 1))
+        ]
+    )
+
+
 if __name__ == "__main__":
     with open("input5.txt", "r") as input_txt:
         POLYMER = input_txt.read().strip()
     print(f"Original Length: {len(POLYMER)}")
     print(f"Reduced Length: {len(reduce_polymer(POLYMER))}")
+    print(f"Optimized Length: {optimize_polymer(POLYMER)}")
 
 
 def test_is_reactive():
