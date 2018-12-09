@@ -1,4 +1,7 @@
 """Advent of Code 2018 Day 6"""
+from itertools import chain
+from collections import Counter
+
 from common import get_puzzle_input
 
 
@@ -20,40 +23,54 @@ def get_bounding_area(points):
     return (lower_x, lower_y), (upper_x, upper_y)
 
 
+def get_largest(grid, points):
+    """Count all the valid points and find the largest one."""
+    return Counter(i for i in list(chain.from_iterable(grid)))
+
+
 def get_nearest_point(location, points):
     """Find out who is closest.
 
        If the distance is zero; we are at a point.  If it equals someone else, it's disqualified.
     """
-    distance = 0
+    distance = 1000
     closest = "X"
     for key, value in points.items():
         man = manhattan_distance(location, value)
         if man == 0:
-            return {key: 0}
+            return key
         elif man < distance:
             distance = man
             closest = key
         elif man == distance:
             return "X"
-        else:
-            distance = man
-            closest = key
-    return {closest: distance}
+    return closest
 
 
 def generate_grid(lower, upper):
     """Generate a list to fit the bounding points."""
-    return [[[]] * (upper[0] - lower[0])] * (upper[1] - lower[1])
+    return [[{}] * (upper[0] - lower[0])] * (upper[1] - lower[1])
 
 
 def fill_grid(grid, lower, upper, points):
     """Loop over every point and find the nearest neighbor."""
-    points_id = {index: value for index, value in enumerate(points)}
+    infinite_points = set()
     for row in range(upper[1] - lower[1]):
+        row_offset = row + lower[0]
         for column in range(upper[0] - lower[0]):
-            grid[row][column] = get_nearest_point((row + lower[0], column + lower[1]), points_id)
-    return grid
+            column_offset = column + lower[1]
+            closest_point = get_nearest_point((row_offset, column_offset), points)
+            if (
+                row_offset == lower[1] or
+                row_offset == upper[1] or
+                column_offset == lower[0] or
+                column_offset == upper[0]
+            ):
+                infinite_points.add(closest_point)
+                grid[row][column] = "-"
+            else:
+                grid[row][column] = closest_point
+    return grid, infinite_points
 
 
 if __name__ == "__main__":
@@ -63,8 +80,14 @@ if __name__ == "__main__":
     ]
     lower, upper = get_bounding_area(COORDINATES)
     grid = generate_grid(lower, upper)
-    filled_grid = fill_grid(grid, lower, upper, COORDINATES)
-    print(filled_grid)
+
+    NEW_COORDINATES = {key: value for key, value in enumerate(COORDINATES)}
+    grid, infinite_points = fill_grid(grid, lower, upper, NEW_COORDINATES)
+    valid_coordinates = {p: v for p, v in NEW_COORDINATES.items() if p not in infinite_points}
+    areas = get_largest(grid, valid_coordinates)
+    print(areas)
+    largest = areas.most_common(1)[0]
+    print(f"Largest Area: {NEW_COORDINATES[largest[0]]} Size: {largest[1]}")
 
 
 def test_manhattan_distance():
