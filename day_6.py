@@ -45,17 +45,17 @@ def get_nearest_point(location, points):
 
 def generate_and_fill_grid(upper, points):
     """Loop over every point and find the nearest neighbor."""
-    grid = [["x"] * upper[0] for i in range(upper[1])]
+    grid = [["x"] * upper["y"] for i in range(upper["x"])]
+    print(grid)
     infinite_points = set()
     infinite_points.add("X")
     count = 0
-    for y in range(0, upper[1]):
-        for x in range(0, upper[0]):
+    for y in range(0, upper["y"]):
+        for x in range(0, upper["x"]):
             count += 1
             closest_point = get_nearest_point((x, y), points)
-            if y == 0 or y == upper[1] or x == 0 or x == upper[0]:
+            if y == 0 or y == (upper["y"] - 1) or x == 0 or x == (upper["x"] - 1):
                 infinite_points.add(closest_point)
-            print(f"X: {x} Y: {y}")
             grid[x][y] = closest_point
     return grid, {p: v for p, v in points.items() if p not in infinite_points}
 
@@ -93,8 +93,8 @@ def test_get_nearest_point():
 
 
 def test_generate_and_fill_grid():
-    grid, points = generate_and_fill_grid((5, 6), {0: (0, 0), 1: (4, 4), 2: (2, 2)})
-    # assert points == {2: (3, 3)}
+    grid, points = generate_and_fill_grid({"x": 5, "y": 5}, {0: (0, 0), 1: (4, 4), 2: (2, 2)})
+    assert points == {2: (2, 2)}
     assert grid == [
         [0, 0, "X", "X", "X"],
         [0, "X", 2, "X", "X"],
@@ -102,4 +102,4 @@ def test_generate_and_fill_grid():
         ["X", "X", 2, "X", 1],
         ["X", "X", "X", 1, 1],
     ]
-    assert generate_and_fill_grid((2, 2), {0: (1, 1)}) == ([[0, 0], [0, 0]], {})
+    assert generate_and_fill_grid({"x": 2, "y": 2}, {0: (1, 1)}) == ([[0, 0], [0, 0]], {})
