@@ -14,7 +14,7 @@ def get_upper_boundary(points):
     """Given a list of Cartesian points, find a bounding box"""
     upper_x = max(x[0] for x in points)
     upper_y = max(y[1] for y in points)
-    return (upper_x, upper_y)
+    return {"x": upper_x, "y": upper_y}
 
 
 def get_largest(grid, points):
@@ -32,9 +32,11 @@ def get_nearest_point(location, points):
     for key, value in points.items():
         man = manhattan_distance(location, value)
         if man == 0:  # We are at the point.
-            return key
+            closest = key
+            break
         elif man == distance:  # We had a tie, invalidate the tile.
-            return "X"
+            closest = "X"
+            distance = 1
         elif man < distance:  # This point was closer than the last, so make it the closest
             distance = man
             closest = key
@@ -43,18 +45,18 @@ def get_nearest_point(location, points):
 
 def generate_and_fill_grid(upper, points):
     """Loop over every point and find the nearest neighbor."""
-    grid = [[0] * upper[0]] * upper[1]
+    grid = [["x"] * upper[0] for i in range(upper[1])]
     infinite_points = set()
     infinite_points.add("X")
-    for row in range(0, upper[1]):
-        for column in range(0, upper[0]):
-            closest_point = get_nearest_point((row, column), points)
-            if (
-                row == 0 or row == upper[0] or  # 357
-                column == 0 or column == upper[1]  # 356
-            ):
+    count = 0
+    for y in range(0, upper[1]):
+        for x in range(0, upper[0]):
+            count += 1
+            closest_point = get_nearest_point((x, y), points)
+            if y == 0 or y == upper[1] or x == 0 or x == upper[0]:
                 infinite_points.add(closest_point)
-            grid[row][column] = closest_point
+            print(f"X: {x} Y: {y}")
+            grid[x][y] = closest_point
     return grid, {p: v for p, v in points.items() if p not in infinite_points}
 
 
@@ -74,3 +76,30 @@ if __name__ == "__main__":
 
 def test_manhattan_distance():
     assert manhattan_distance((1, 1), (2, 2)) == 2
+    assert manhattan_distance((1, 2), (2, 2)) == 1
+    assert manhattan_distance((1, 3), (2, 2)) == 2
+
+
+def test_get_upper_boundary():
+    points = [(1, 2), (1, 3), (4, 5), (10, 4), (8, 10)]
+    assert get_upper_boundary(points) == {"x": 10, "y": 10}
+
+
+def test_get_nearest_point():
+    points = {0: (1, 2), 1: (1, 3), 2: (4, 5), 3: (10, 4), 4: (8, 10)}
+    assert get_nearest_point((1, 1), points) == 0
+    assert get_nearest_point((2, 3), points) == 1
+    assert get_nearest_point((1, 3), points) == 1
+
+
+def test_generate_and_fill_grid():
+    grid, points = generate_and_fill_grid((5, 6), {0: (0, 0), 1: (4, 4), 2: (2, 2)})
+    # assert points == {2: (3, 3)}
+    assert grid == [
+        [0, 0, "X", "X", "X"],
+        [0, "X", 2, "X", "X"],
+        ["X", 2, 2, 2, "X"],
+        ["X", "X", 2, "X", 1],
+        ["X", "X", "X", 1, 1],
+    ]
+    assert generate_and_fill_grid((2, 2), {0: (1, 1)}) == ([[0, 0], [0, 0]], {})
