@@ -28,35 +28,41 @@ def get_nearest_point(location, points):
        If the distance is zero; we are at a point.  If it equals someone else, it's disqualified.
     """
     distance = 10000
+    total_distance = 0
     closest = "X"
     for key, value in points.items():
         man = manhattan_distance(location, value)
+        total_distance += man
         if man == 0:  # We are at the point.
             closest = key
-            break
+            distance = 0
         elif man == distance:  # We had a tie, invalidate the tile.
             closest = "X"
             distance = 1
-        elif man < distance:  # This point was closer than the last, so make it the closest
+        elif man < distance:  # This point was closer than the last
             distance = man
             closest = key
-    return closest
+    return closest, total_distance
 
 
 def generate_and_fill_grid(upper, points):
     """Loop over every point and find the nearest neighbor."""
+    # pylint: disable=C0103
     grid = [["x"] * upper["y"] for i in range(upper["x"])]
-    print(grid)
     infinite_points = set()
     infinite_points.add("X")
+    safe_regions = []
     count = 0
     for y in range(0, upper["y"]):
         for x in range(0, upper["x"]):
             count += 1
-            closest_point = get_nearest_point((x, y), points)
+            closest_point, total_distance = get_nearest_point((x, y), points)
             if y == 0 or y == (upper["y"] - 1) or x == 0 or x == (upper["x"] - 1):
                 infinite_points.add(closest_point)
+            if total_distance < 10000:
+                safe_regions.append((x, y))
             grid[x][y] = closest_point
+    print(f"Safe Region Size: {len(safe_regions)}")
     return grid, {p: v for p, v in points.items() if p not in infinite_points}
 
 
@@ -65,35 +71,40 @@ if __name__ == "__main__":
         (int(x[0]), int(x[1]))
         for x in (x.split(",") for x in get_puzzle_input("input6.txt"))
     ]
-    upper = get_upper_boundary(COORDINATES)
+    UPPER = get_upper_boundary(COORDINATES)
     NEW_COORDINATES = {key: value for key, value in enumerate(COORDINATES)}
-    grid, valid_points = generate_and_fill_grid(upper, NEW_COORDINATES)
-    areas = get_largest(grid, valid_points)
-    print(areas)
-    largest = areas.most_common(1)[0]
-    print(f"Largest Area: {valid_points[largest[0]]} Size: {largest[1]}")
+    GRID, VALID_POINTS = generate_and_fill_grid(UPPER, NEW_COORDINATES)
+    AREAS = get_largest(GRID, VALID_POINTS)
+    LARGEST = AREAS.most_common(1)[0]
+    print(f"Largest Area: {VALID_POINTS[LARGEST[0]]} Size: {LARGEST[1]}")
 
 
 def test_manhattan_distance():
+    """Make sure that the rise/run is being calculated correctly."""
     assert manhattan_distance((1, 1), (2, 2)) == 2
     assert manhattan_distance((1, 2), (2, 2)) == 1
     assert manhattan_distance((1, 3), (2, 2)) == 2
 
 
 def test_get_upper_boundary():
+    """Verify that the grid will be large enough for the points."""
     points = [(1, 2), (1, 3), (4, 5), (10, 4), (8, 10)]
     assert get_upper_boundary(points) == {"x": 10, "y": 10}
 
 
 def test_get_nearest_point():
+    """Should return the nearest point and the total distance."""
     points = {0: (1, 2), 1: (1, 3), 2: (4, 5), 3: (10, 4), 4: (8, 10)}
-    assert get_nearest_point((1, 1), points) == 0
-    assert get_nearest_point((2, 3), points) == 1
-    assert get_nearest_point((1, 3), points) == 1
+    assert get_nearest_point((1, 1), points) == (0, 38)
+    assert get_nearest_point((2, 3), points) == (1, 29)
+    assert get_nearest_point((1, 3), points) == (1, 30)
 
 
 def test_generate_and_fill_grid():
-    grid, points = generate_and_fill_grid({"x": 5, "y": 5}, {0: (0, 0), 1: (4, 4), 2: (2, 2)})
+    """Verify that the grid fills with a sample set of data."""
+    grid, points = generate_and_fill_grid(
+        {"x": 5, "y": 5}, {0: (0, 0), 1: (4, 4), 2: (2, 2)}
+    )
     assert points == {2: (2, 2)}
     assert grid == [
         [0, 0, "X", "X", "X"],
@@ -102,4 +113,7 @@ def test_generate_and_fill_grid():
         ["X", "X", 2, "X", 1],
         ["X", "X", "X", 1, 1],
     ]
-    assert generate_and_fill_grid({"x": 2, "y": 2}, {0: (1, 1)}) == ([[0, 0], [0, 0]], {})
+    assert generate_and_fill_grid({"x": 2, "y": 2}, {0: (1, 1)}) == (
+        [[0, 0], [0, 0]],
+        {},
+    )
