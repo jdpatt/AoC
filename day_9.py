@@ -1,9 +1,10 @@
 """Advent of Code 2018 Day 9"""
-from common import get_puzzle_input
 from itertools import cycle
 
+from common import get_puzzle_input
 
-class Marble():
+
+class Marble:
     """Circular Doubly Linked List"""
 
     def __init__(self, number, before=None, after=None):
@@ -13,12 +14,14 @@ class Marble():
         self.next = after
 
     def remove(self):
+        """Remove the this marble from the list."""
         current_marble = self.next
         self.previous.next = self.next
         self.next.previous = self.previous
         return current_marble
 
     def append(self, number):
+        """Append a new marble after this marble."""
         marble = Marble(number, self, self.next)
         self.next.previous = marble
         self.next = marble
