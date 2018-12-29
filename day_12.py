@@ -4,7 +4,7 @@ from typing import Sequence, Dict
 from common import get_puzzle_input
 
 
-def transform_patterns(patterns: Sequence):
+def transform_patterns(patterns: Sequence) -> Dict:
     """Transform the patterns from a string of `##... => .` to a usable pattern and result."""
     return {
         key.strip(): value.strip()
@@ -23,7 +23,7 @@ def transform_initial_state(state: str):
     return starting_state
 
 
-def calculate_new_generation(current_gen: Dict, patterns: Sequence):
+def calculate_new_generation(current_gen: Dict, patterns: Dict) -> Dict:
     """Calculate the next generation based off the last generation and the patterns."""
     next_gen = {**current_gen}
     for pot, plant in current_gen.items():
@@ -45,7 +45,7 @@ def calculate_new_generation(current_gen: Dict, patterns: Sequence):
     return next_gen
 
 
-def count_pots_with_plants(generation: Dict):
+def count_pots_with_plants(generation: Dict) -> int:
     """Sum any index that has a plant in it (#)."""
     plant_count = 0
     for pot_index, plant in generation.items():
@@ -54,16 +54,33 @@ def count_pots_with_plants(generation: Dict):
     return plant_count
 
 
+def get_more_pots(current_pots: Dict) -> Dict:
+    """See that we have too many plants growing and add some more pots.
+
+    Make sure that there is always five empty pots to the left and right if the lowest and highest
+    pots are taken.
+    """
+    smallest = min(current_pots)  # Always should be negative due to initial state being 0.
+    largest = max(current_pots)
+    if current_pots[smallest] == "#":
+        for pot in range(smallest - 1, smallest - 6, -1):
+            current_pots[pot] = "."
+    if current_pots[largest] == "#":
+        for pot in range(largest + 1, largest + 6):
+            current_pots[pot] = "."
+    return current_pots
+
+
 if __name__ == "__main__":
     PUZZLE = get_puzzle_input("input12.txt")
-    GENERATIONS = 20
+    GENERATIONS = 200  # After about 160 loops; every generation is adding 8.
     CURRENT_GEN = transform_initial_state(PUZZLE[0][15:])
     PATTERNS = transform_patterns(PUZZLE[2:])
-    print(f" 0: {''.join(str(x) for x in CURRENT_GEN.values())}")
     for loop in range(0, GENERATIONS):
         CURRENT_GEN = calculate_new_generation(CURRENT_GEN, PATTERNS)
-        print(f"{loop + 1:2}: {''.join(str(x) for x in CURRENT_GEN.values())}")
+        CURRENT_GEN = get_more_pots(CURRENT_GEN)
     COUNT = count_pots_with_plants(CURRENT_GEN)
+    COUNT = COUNT + (50_000_000_000 - GENERATIONS) * 8
     print(f"Final Plant Count: {COUNT}")
 
 
@@ -151,3 +168,21 @@ def test_calculate_new_generation():
     assert (
         "".join(x for x in third_gen.values()) == "...##..##...##....#..#..#..##.........."
     )
+
+
+def test_get_more_pots():
+    """Verify that we append and prepend pots correctly."""
+    assert get_more_pots({-5: "#", 5: "#"}) == {
+        -10: ".",
+        -9: ".",
+        -8: ".",
+        -7: ".",
+        -6: ".",
+        -5: "#",
+        5: "#",
+        6: ".",
+        7: ".",
+        8: ".",
+        9: ".",
+        10: ".",
+    }
