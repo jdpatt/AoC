@@ -12,9 +12,8 @@ def calculate_fuel_cell(grid_width, serial):
     In X,Y notation, the top-left cell is 1,1, and the top-right cell is 300,1
     """
     fuel_cell = {}
-    for row in range(1, grid_width + 1):
-        for column in range(1, grid_width + 1):
-            fuel_cell[(column, row)] = calculate_power_level(column, row, serial)
+    for row, column in product(range(1, grid_width + 1), range(1, grid_width + 1)):
+        fuel_cell[(column, row)] = calculate_power_level(column, row, serial)
     return fuel_cell
 
 
