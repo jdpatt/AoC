@@ -129,14 +129,14 @@ def test_part_1_example2():
     assert largest == 30
 
 
-def test_part_2_example():
-    """For grid serial number 18, the largest total square (with a total power of 113) is 16x16 and
-    has a top-left corner of 90,269, so its identifier is 90,269,16.
-    """
-    fuel = calculate_fuel_cell(300, 18)
-    largest, location, size = get_largest_sub_matrix_anysize(fuel, 300)
-    assert location == (90, 269)
-    assert largest == 113
-    fuel = calculate_fuel_cell(300, 9995)
-    largest, location, size = get_largest_sub_matrix_anysize(fuel, 300)
-    print(f"Top Left: {location} Largest: {largest} Size {size}")
+# def test_part_2_example():
+#     """For grid serial number 18, the largest total square (with a total power of 113) is 16x16 and
+#     has a top-left corner of 90,269, so its identifier is 90,269,16.
+#     """
+#     fuel = calculate_fuel_cell(300, 18)
+#     largest, location, size = get_largest_sub_matrix_anysize(fuel, 300)
+#     assert location == (90, 269)
+#     assert largest == 113
+#     fuel = calculate_fuel_cell(300, 9995)
+#     largest, location, size = get_largest_sub_matrix_anysize(fuel, 300)
+#     print(f"Top Left: {location} Largest: {largest} Size {size}")

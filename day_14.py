@@ -32,12 +32,13 @@ def main():
     elf1 = 0  # The first elf picks the score at index 0
     elf2 = 1  # The second elf gets the next one
     for loop in range(RECIPES):
+        print(f"Current Loop: {loop} of {RECIPES}")
         scoreboard, elf1, elf2 = create_new_recipe(scoreboard, elf1, elf2)
     print(scoreboard)
     length = len(scoreboard)
     while len(scoreboard) <= length + 10:
         scoreboard, elf1, elf2 = create_new_recipe(scoreboard, elf1, elf2)
-    print(scoreboard)
+    print(scoreboard[-10:])
 
 
 if __name__ == "__main__":
