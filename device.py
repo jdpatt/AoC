@@ -1,9 +1,11 @@
 class Device:
-    """Object representing the Device."""
+    """Object representing the Wrist Device."""
 
-    def __init__(self):
+    def __init__(self, registers=[0 for _ in range(6)], instruction_register=0):
         super(Device, self).__init__()
-        self.registers = [0, 0, 0, 0]
+        self.registers = registers
+        self.instruction_pointer = 0
+        self.instruction_register = instruction_register
         self.opcodes = {x: None for x in range(16)}
         self.opcode_names = {
             "addr": self.addr,
@@ -109,7 +111,15 @@ class Device:
     def run_program(self, program):
         """Run the program with the current opcodes."""
         for line in program:
-            self.opcodes[line[0]](line[1], line[2], line[3])
+            self.opcodes[int(line[0])](int(line[1]), int(line[2]), int(line[3]))
+
+    def run_program_with_flow_control(self, program):
+        """Run the program with the current opcodes."""
+        while 0 <= self.instruction_pointer < len(program):
+            self.registers[self.instruction_register] = self.instruction_pointer
+            line = program[self.instruction_pointer]
+            self.opcode_names[line[0]](int(line[1]), int(line[2]), int(line[3]))
+            self.instruction_pointer = self.registers[self.instruction_register] + 1
 
     def __str__(self):
-        return f"Registers: {self.registers}"
+        return f"IP: {self.instruction_pointer} Registers: {self.registers}"

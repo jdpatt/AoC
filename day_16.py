@@ -1,10 +1,10 @@
 """Advent of Code 2018 Day 16"""
 from copy import copy
 from itertools import cycle
-from re import search
 
 from common import get_puzzle_input
 from device import Device
+from transforms import transform_register_string, transform_program, transform_operation
 
 
 def find_ops_that_match_xplus(samples, matches):
@@ -66,24 +66,6 @@ def solve_opcodes(samples):
     return dev
 
 
-def transform_register_string(text):
-    """Transform the string into a list with each integer element."""
-    reg = search(r".+\[(.+)\]", text)
-    if reg:
-        return [int(x) for x in reg.group(1).split(",")]
-    raise ValueError
-
-
-def transform_operation(text):
-    """Transform the string into a list with each integer element."""
-    return [int(x) for x in text.split(" ")]
-
-
-def transform_program(text):
-    """Transform the string into a list representing one operation of the program."""
-    return [[int(y) for y in x.split(" ")] for x in text if x]
-
-
 def main():
     """Main Puzzle Entry."""
     puzzle = get_puzzle_input("input16.txt")
@@ -108,22 +90,6 @@ def test_opcode_test():
         "mulr",
         "seti",
     ]
-
-
-def test_transform_register_string():
-    """Verify that we can transform the string into the correct list."""
-    assert transform_register_string("Before: [1, 0, 2, 0]") == [1, 0, 2, 0]
-    assert transform_register_string("After:  [1, 1, 2, 0]") == [1, 1, 2, 0]
-
-
-def test_transform_operation():
-    """Verify that we can transform the string into the correct list."""
-    assert transform_operation("4 1 0 1") == [4, 1, 0, 1]
-
-
-def test_transform_program():
-    """Verify that we can transform the string into the correct list."""
-    assert transform_program(["", "9 3 3 0", "9 1 0 1"]) == [[9, 3, 3, 0], [9, 1, 0, 1]]
 
 
 def test_run_program():
