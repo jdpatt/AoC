@@ -2,9 +2,9 @@
 from copy import copy
 from itertools import cycle
 
-from common import get_puzzle_input
-from device import Device
-from transforms import transform_register_string, transform_program, transform_operation
+from shared.common import get_puzzle_input
+from shared.device import Device
+from shared.transforms import transform_register_string, transform_program, transform_operation
 
 
 def find_ops_that_match_xplus(samples, matches):
@@ -68,8 +68,8 @@ def solve_opcodes(samples):
 
 def main():
     """Main Puzzle Entry."""
-    puzzle = get_puzzle_input("input16.txt")
-    samples = get_sample_operations("input16.txt")
+    puzzle = get_puzzle_input("input/input16.txt")
+    samples = get_sample_operations("input/input16.txt")
     print("Part 1: How many samples behave like 3 or more opcodes?")
     print(len(find_ops_that_match_xplus(samples, 3)))
 

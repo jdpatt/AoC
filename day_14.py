@@ -1,7 +1,7 @@
 """Advent of Code 2018 Day 14"""
 import pytest
 
-from common import get_puzzle_input
+from shared.common import get_puzzle_input
 
 
 def pick_new_recipe(current, scoreboard):
@@ -31,7 +31,7 @@ def find_sub_list(main_list, sub_list):
 
 def main():
     """Main Puzzle Entry."""
-    recipes = int(get_puzzle_input("input14.txt")[0])
+    recipes = int(get_puzzle_input("input/input14.txt")[0])
     scoreboard = [3, 7]
     elf1 = 0  # The first elf picks the score at index 0
     elf2 = 1  # The second elf gets the next one

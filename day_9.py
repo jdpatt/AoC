@@ -1,7 +1,7 @@
 """Advent of Code 2018 Day 9"""
 from itertools import cycle
 
-from common import get_puzzle_input
+from shared.common import get_puzzle_input
 
 
 class Marble:
@@ -51,7 +51,7 @@ def play_marbles(num_of_players, num_of_marbles):
 
 
 if __name__ == "__main__":
-    PUZZLE = get_puzzle_input("input9.txt")[0].split(" ")
+    PUZZLE = get_puzzle_input("input/input9.txt")[0].split(" ")
     PLAYERS = int(PUZZLE[0])
     LAST_MARBLE = int(PUZZLE[6])
     FINAL_SCORE = play_marbles(PLAYERS, LAST_MARBLE)

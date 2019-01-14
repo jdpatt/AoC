@@ -3,7 +3,7 @@
 from collections import namedtuple
 from re import search
 
-from common import get_puzzle_input
+from shared.common import get_puzzle_input
 
 Point = namedtuple("Point", ["x", "y"])
 Velocity = namedtuple("Velocity", ["x", "y"])
@@ -78,7 +78,7 @@ def print_grid(points):
 
 
 if __name__ == "__main__":
-    PUZZLE = get_puzzle_input("input10.txt")
+    PUZZLE = get_puzzle_input("input/input10.txt")
     POINTS = get_points_from_input(PUZZLE)
     for point in POINTS:
         point.advance(10086)

@@ -42,7 +42,7 @@ def find_fabric_ids(potential_ids: Sequence[str]):
 
 
 if __name__ == "__main__":
-    with open("input2.txt", "r") as input_text:
+    with open("input/input2.txt", "r") as input_text:
         IDS = input_text.readlines()
     print(f"Checksum: {generate_checksum(IDS)}")
     find_fabric_ids(IDS)

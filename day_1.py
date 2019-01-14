@@ -1,5 +1,5 @@
 """Advent of Code 2018 Day 1"""
-from common import get_puzzle_input
+from shared.common import get_puzzle_input
 
 
 def device_calibration(frequencies):
@@ -21,6 +21,6 @@ def find_repeating_frequency(frequencies):
 
 
 if __name__ == "__main__":
-        frequencies = [int(x) for x in get_puzzle_input("input1.txt")]
-        print(f"Final Frequency: {device_calibration(frequencies)}")
-        print(f"First Repeated: {find_repeating_frequency(frequencies)}")
+    frequencies = [int(x) for x in get_puzzle_input("input/input1.txt")]
+    print(f"Final Frequency: {device_calibration(frequencies)}")
+    print(f"First Repeated: {find_repeating_frequency(frequencies)}")

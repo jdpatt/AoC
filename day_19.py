@@ -1,12 +1,12 @@
 """Advent of Code 2018 Day 19"""
-from common import get_puzzle_input
-from device import Device
-from transforms import transform_program
+from shared.common import get_puzzle_input
+from shared.device import Device
+from shared.transforms import transform_program
 
 
 def main():
     """Main Puzzle Entry."""
-    puzzle = get_puzzle_input("input19.txt")
+    puzzle = get_puzzle_input("input/input19.txt")
     program = transform_program(puzzle[1:])
     print("Part 1: What is left in register 0 after the program ends.")
     dev = Device(instruction_register=int(puzzle[0][3:]))

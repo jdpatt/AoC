@@ -3,7 +3,7 @@ from collections import defaultdict
 from re import search
 from string import ascii_uppercase
 
-from common import get_puzzle_input
+from shared.common import get_puzzle_input
 
 
 def convert_input_text(text):
@@ -70,7 +70,7 @@ def remove_predecessors(steps, letter):
 
 
 if __name__ == '__main__':
-    PUZZLE = get_puzzle_input("input7.txt")
+    PUZZLE = get_puzzle_input("input/input7.txt")
     STEPS = convert_input_text(PUZZLE)
     DURATION = find_parallel_duration(STEPS)
     ORDER = find_sequential_ordering(STEPS)

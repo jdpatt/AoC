@@ -35,7 +35,7 @@ def optimize_polymer(polymer):
 
 
 if __name__ == "__main__":
-    with open("input5.txt", "r") as input_txt:
+    with open("input/input5.txt", "r") as input_txt:
         POLYMER = input_txt.read().strip()
     print(f"Original Length: {len(POLYMER)}")
     print(f"Reduced Length: {len(reduce_polymer(POLYMER))}")

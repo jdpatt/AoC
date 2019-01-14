@@ -2,7 +2,7 @@
 from itertools import chain
 from collections import Counter
 
-from common import get_puzzle_input
+from shared.common import get_puzzle_input
 
 
 def manhattan_distance(point_1, point_2):
@@ -69,7 +69,7 @@ def generate_and_fill_grid(upper, points):
 if __name__ == "__main__":
     COORDINATES = [
         (int(x[0]), int(x[1]))
-        for x in (x.split(",") for x in get_puzzle_input("input6.txt"))
+        for x in (x.split(",") for x in get_puzzle_input("input/input6.txt"))
     ]
     UPPER = get_upper_boundary(COORDINATES)
     NEW_COORDINATES = {key: value for key, value in enumerate(COORDINATES)}

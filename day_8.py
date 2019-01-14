@@ -1,5 +1,5 @@
 """Advent of Code 2018 Day 8"""
-from common import get_puzzle_input
+from shared.common import get_puzzle_input
 
 
 class Node:
@@ -38,7 +38,7 @@ def generate_nodes(tree, data, parent):
 
 
 if __name__ == "__main__":
-    PUZZLE = [int(x) for x in get_puzzle_input("input8.txt")[0].split(" ")]
+    PUZZLE = [int(x) for x in get_puzzle_input("input/input8.txt")[0].split(" ")]
     TREE, _, ROOT_VALUE = generate_nodes([], iter(PUZZLE), "Root")
     print(f"Metadata sum: {sum([sum(node.meta) for node in TREE])}")
     print(f"Root Value: {ROOT_VALUE}")

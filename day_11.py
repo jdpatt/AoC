@@ -3,7 +3,7 @@
 # x, y and k are valid names for this puzzle.
 from itertools import product
 
-from common import get_puzzle_input
+from shared.common import get_puzzle_input
 
 
 def calculate_fuel_cell(grid_width, serial):
@@ -72,7 +72,7 @@ def get_sub_matrix_sum(matrix, start, k):
 
 def main():
     """Main Puzzle Entry."""
-    SERIAL_NUMBER = int(get_puzzle_input("input11.txt")[0])
+    SERIAL_NUMBER = int(get_puzzle_input("input/input11.txt")[0])
     GRID_WIDTH = 300
     fuel_cell = calculate_fuel_cell(GRID_WIDTH, SERIAL_NUMBER)
     largest, location = get_largest_sub_matrix(fuel_cell, GRID_WIDTH, 3)

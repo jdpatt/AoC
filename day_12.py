@@ -1,7 +1,7 @@
 """Advent of Code 2018 Day 12"""
 from typing import Sequence, Dict
 
-from common import get_puzzle_input
+from shared.common import get_puzzle_input
 
 
 def transform_patterns(patterns: Sequence) -> Dict:
@@ -72,7 +72,7 @@ def get_more_pots(current_pots: Dict) -> Dict:
 
 
 if __name__ == "__main__":
-    PUZZLE = get_puzzle_input("input12.txt")
+    PUZZLE = get_puzzle_input("input/input12.txt")
     GENERATIONS = 200  # After about 160 loops; every generation is adding 8.
     CURRENT_GEN = transform_initial_state(PUZZLE[0][15:])
     PATTERNS = transform_patterns(PUZZLE[2:])

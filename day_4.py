@@ -69,7 +69,7 @@ def find_the_dependable_lazy(log):
 
 
 if __name__ == "__main__":
-    SORTED_ENTRIES = sort_guard_entries("input4.txt")
+    SORTED_ENTRIES = sort_guard_entries("input/input4.txt")
     LOG = record_guard_sleep_time(SORTED_ENTRIES)
     SLEEPY, TIME = find_the_laziest(LOG)
     print(f"Lazy ID: {SLEEPY} Minute: {TIME} -> {SLEEPY * TIME}")
