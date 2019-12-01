@@ -1,5 +1,7 @@
-aoc.sublime-workspace
-aoc.sublime-project
 __pycache__/
 output.txt
-.mypy_cache
+.mypy_cache/
+.venv/
+.pytest_cache/
+.vscode/
+*.code-workspace
