@@ -6,7 +6,7 @@ def get_and_transform_input(filename, transform=None):
 
     If a function is passed to transform, this will run that function on every line of the input.
     """
-    with open(Path().joinpath("2019", "input", filename), "r") as input_txt:
+    with open(Path().joinpath("input", filename), "r") as input_txt:
         if transform:
             return [transform(x) for x in input_txt.read().splitlines()]
         return input_txt.read().splitlines()
