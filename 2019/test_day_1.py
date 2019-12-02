@@ -1,5 +1,6 @@
 from day_1 import calc_fuel_for_mass, calc_total_fuel
 
+
 def test_calculate_fuel_for_mass():
     assert calc_fuel_for_mass(12) == 2
     assert calc_fuel_for_mass(14) == 2
