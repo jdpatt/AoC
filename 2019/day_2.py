@@ -2,6 +2,8 @@
 import operator
 from shared.common import get_and_transform_input
 
+import pytest
+
 OPCODES = {1: operator.add, 2: operator.mul, 99: None}  # Halt
 STEP = 4
 
@@ -54,3 +56,20 @@ if __name__ == "__main__":
                 print(f"Noun: {noun} Verb: {verb}")
                 print(f"Part 2 Results {100 * noun + verb}")
                 break
+
+
+@pytest.fixture
+def computer():
+    return IntCodeComputer(
+        [1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50], input1=9, input2=10
+    )
+
+
+def test_operand(computer):
+    computer.run_opcode(0)
+    assert computer.memory == [1, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50]
+
+
+def test_program(computer):
+    computer.run_program()
+    assert computer.memory == [3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50]

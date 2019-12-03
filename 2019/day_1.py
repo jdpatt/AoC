@@ -32,3 +32,15 @@ if __name__ == "__main__":
     PUZZLE = get_and_transform_input("input1.txt", int)
     print(f"Part 1: {sum([calc_fuel_for_mass(mass) for mass in PUZZLE])}")
     print(f"Part 2: {sum([calc_total_fuel(mass) for mass in PUZZLE])}")
+
+
+def test_calculate_fuel_for_mass():
+    assert calc_fuel_for_mass(12) == 2
+    assert calc_fuel_for_mass(14) == 2
+    assert calc_fuel_for_mass(1969) == 654
+    assert calc_fuel_for_mass(100756) == 33583
+
+
+def test_calc_for_total_fuel():
+    assert calc_total_fuel(14) == 2
+    assert calc_total_fuel(1969) == 966
