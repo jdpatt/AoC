@@ -60,7 +60,9 @@ def get_more_pots(current_pots: Dict) -> Dict:
     Make sure that there is always five empty pots to the left and right if the lowest and highest
     pots are taken.
     """
-    smallest = min(current_pots)  # Always should be negative due to initial state being 0.
+    smallest = min(
+        current_pots
+    )  # Always should be negative due to initial state being 0.
     largest = max(current_pots)
     if current_pots[smallest] == "#":
         for pot in range(smallest - 1, smallest - 6, -1):
@@ -88,7 +90,8 @@ def test_transform_initial_state():
     """Verify that the input string it correctly turned in to the expected dictionary."""
     results = transform_initial_state("#..#.#..##......###...###")
     assert (
-        "".join(x for x in results.values()) == "...#..#.#..##......###...###..........."
+        "".join(x for x in results.values())
+        == "...#..#.#..##......###...###..........."
     )
 
 
@@ -162,11 +165,13 @@ def test_calculate_new_generation():
     }
     second_gen = calculate_new_generation(first_gen, patterns)
     assert (
-        "".join(x for x in second_gen.values()) == "...#...#....#.....#..#..#..#..........."
+        "".join(x for x in second_gen.values())
+        == "...#...#....#.....#..#..#..#..........."
     )
     third_gen = calculate_new_generation(second_gen, patterns)
     assert (
-        "".join(x for x in third_gen.values()) == "...##..##...##....#..#..#..##.........."
+        "".join(x for x in third_gen.values())
+        == "...##..##...##....#..#..#..##.........."
     )
 
 

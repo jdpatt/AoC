@@ -35,8 +35,8 @@ def find_fabric_ids(potential_ids: Sequence[str]):
             seq = SequenceMatcher(None, item_one, item_two)
             if seq.ratio() >= ratio and seq.ratio() != 1:
                 matches = seq.get_matching_blocks()
-                before = item_one[matches[0].a: matches[0].a + matches[0].size]
-                after = item_one[matches[1].a: matches[1].a + matches[1].size]
+                before = item_one[matches[0].a : matches[0].a + matches[0].size]
+                after = item_one[matches[1].a : matches[1].a + matches[1].size]
                 print(f"Common between the two IDs: {before}{after}")
                 return
 

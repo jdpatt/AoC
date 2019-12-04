@@ -65,7 +65,9 @@ def get_largest_sub_matrix_anysize(matrix, matrix_width):
 def get_sub_matrix_sum(matrix, start, k):
     """Return a sub matrix with the size of `k` starting at `start`."""
     matrix_sum = 0
-    for item in product(range(0 + start[0], k + start[0]), range(0 + start[1], k + start[1])):
+    for item in product(
+        range(0 + start[0], k + start[0]), range(0 + start[1], k + start[1])
+    ):
         matrix_sum += matrix.get(item, 0)
     return matrix_sum
 

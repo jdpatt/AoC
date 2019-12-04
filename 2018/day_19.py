@@ -12,7 +12,9 @@ def main():
     dev = Device(instruction_register=int(puzzle[0][3:]))
     dev.run_program_with_flow_control(program)
     print(dev)
-    print("Part 2: Register 0 started with the value 1. What is left after the program?")
+    print(
+        "Part 2: Register 0 started with the value 1. What is left after the program?"
+    )
     dev2 = Device(registers=[1, 0, 0, 0, 0, 0], instruction_register=int(puzzle[0][3:]))
     dev2.run_program_with_flow_control(program)
     print(dev2)

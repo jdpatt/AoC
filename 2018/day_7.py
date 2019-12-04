@@ -24,7 +24,9 @@ def letter_index(letter):
     return ascii_uppercase.index(letter) + 1
 
 
-def find_parallel_duration(steps, workers=5, step_duration=60):  # GNJOCHKSWTFMXLYDZABIREPVUQ
+def find_parallel_duration(
+    steps, workers=5, step_duration=60
+):  # GNJOCHKSWTFMXLYDZABIREPVUQ
     duration = 0
     agents = []
     while steps or agents:
@@ -32,10 +34,12 @@ def find_parallel_duration(steps, workers=5, step_duration=60):  # GNJOCHKSWTFMX
         for letter in sorted(steps):
             if len(steps[letter]) == 0 and len(agents) < workers:
                 steps.pop(letter)
-                agents.append({
-                    "letter": letter,
-                    "duration": duration - 1 + letter_index(letter) + step_duration
-                })
+                agents.append(
+                    {
+                        "letter": letter,
+                        "duration": duration - 1 + letter_index(letter) + step_duration,
+                    }
+                )
                 print(f"Worker {letter} added.")
         if agents:
             inprogress = []
@@ -69,7 +73,7 @@ def remove_predecessors(steps, letter):
     return steps
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     PUZZLE = get_puzzle_input("input/input7.txt")
     STEPS = convert_input_text(PUZZLE)
     DURATION = find_parallel_duration(STEPS)
@@ -86,11 +90,25 @@ def test_remove_predecessors():
 
 def test_find_sequential_ordering():
     """Compare the sort to the example."""
-    example = {"C": [], "A": ["C"], "F": ["C"], "B": ["A"], "D": ["A"], "E": ["B", "D", "F"]}
+    example = {
+        "C": [],
+        "A": ["C"],
+        "F": ["C"],
+        "B": ["A"],
+        "D": ["A"],
+        "E": ["B", "D", "F"],
+    }
     assert find_sequential_ordering(example) == "CABDFE"
 
 
 def test_find_parallel_duration():
     """Compare the duration to the example."""
-    pt2_example = {"C": [], "A": ["C"], "F": ["C"], "B": ["A"], "D": ["A"], "E": ["B", "D", "F"]}
+    pt2_example = {
+        "C": [],
+        "A": ["C"],
+        "F": ["C"],
+        "B": ["A"],
+        "D": ["A"],
+        "E": ["B", "D", "F"],
+    }
     assert find_parallel_duration(pt2_example, 2, 0) == 15

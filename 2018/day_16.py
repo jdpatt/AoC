@@ -4,7 +4,11 @@ from itertools import cycle
 
 from shared.common import get_puzzle_input
 from shared.device import Device
-from shared.transforms import transform_register_string, transform_program, transform_operation
+from shared.transforms import (
+    transform_register_string,
+    transform_program,
+    transform_operation,
+)
 
 
 def find_ops_that_match_xplus(samples, matches):

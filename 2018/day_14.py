@@ -24,7 +24,7 @@ def find_sub_list(main_list, sub_list):
     """Given a list find a sub list in it. If found return the index of the first match."""
     occurences = [i for i, x in enumerate(main_list) if x == sub_list[0]]
     for match in occurences:
-        if sub_list == main_list[match: match + len(sub_list)]:
+        if sub_list == main_list[match : match + len(sub_list)]:
             return match
     raise ValueError
 
