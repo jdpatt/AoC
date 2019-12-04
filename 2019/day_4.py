@@ -23,9 +23,9 @@ def digits_never_decrease(number):
 def duplicate_pairs_only(number):
     groups = [list(g) for _, g in itertools.groupby(str(number))]
     for group in groups:
-        if len(group) % 2:
-            return False
-    return True
+        if len(group) == 2:
+            return True
+    return False
 
 
 if __name__ == "__main__":
