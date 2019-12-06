@@ -1,4 +1,4 @@
-"""Advent of Code 2019 Day 3"""
+"""Advent of Code 2019 Day 4"""
 import itertools
 
 from shared.common import get_and_transform_input

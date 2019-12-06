@@ -2,6 +2,12 @@
 from pathlib import Path
 
 
+def get_input(filename):
+    """Get the single line from the input file."""
+    with open(Path().joinpath("input", filename), "r") as input_txt:
+        return input_txt.read().splitlines()[0]
+
+
 def get_and_transform_input(filename, transform=None):
     """Split and strip the trailing newlines from the input and optionally transform the input.
 

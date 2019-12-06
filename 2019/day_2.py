@@ -1,75 +1,23 @@
 """Advent of Code 2019 Day 2"""
-import operator
 from shared.common import get_and_transform_input
-
-import pytest
-
-OPCODES = {1: operator.add, 2: operator.mul, 99: None}  # Halt
-STEP = 4
-
-
-class IntCodeComputer:
-    def __init__(self, memory, pointer=0, input1=12, input2=2):
-        self.memory = memory
-        self.pointer = pointer
-        self.update_value(1, input1)
-        self.update_value(2, input2)
-
-    def get_value(self, position):
-        """Return the value stored at this address."""
-        return self.memory[position]
-
-    def update_value(self, position, value):
-        """Set the value at this address."""
-        self.memory[position] = value
-
-    def run_opcode(self, pointer: int):
-        """Run the individual command updating the results in the memory."""
-        input1 = self.get_value(self.memory[pointer + 1])
-        input2 = self.get_value(self.memory[pointer + 2])
-        output = self.memory[pointer + 3]
-        self.memory[output] = OPCODES[self.memory[pointer]](input1, input2,)
-
-    def run_program(self):
-        """Run the intCode Program until completion."""
-        while self.memory[self.pointer] != 99:
-            self.run_opcode(self.pointer)
-            self.pointer += STEP
-        return self.results()
-
-    def results(self):
-        """Return the results after executing the program."""
-        return self.memory[0]
+from shared.intcode_computer import IntCodeComputer
 
 
 if __name__ == "__main__":
     PROGRAM = [int(x) for x in get_and_transform_input("input2.txt")[0].split(",")]
     MEMORY = {index: item for index, item in enumerate(PROGRAM)}
     COMPUTER = IntCodeComputer(memory=MEMORY.copy())
-    print(f"Part 1 after completion: {COMPUTER.run_program()}")
+    COMPUTER.store(1, 12)
+    COMPUTER.store(2, 2)
+    print(f"Part 1 after completion: {COMPUTER.run()}")
 
     print("Part 2")
     for noun in range(100):
         for verb in range(100):
-            COMPUTER = IntCodeComputer(memory=MEMORY.copy(), input1=noun, input2=verb)
-            if COMPUTER.run_program() == 19690720:
+            COMPUTER = IntCodeComputer(memory=MEMORY.copy())
+            COMPUTER.store(1, noun)
+            COMPUTER.store(2, verb)
+            if COMPUTER.run() == 19690720:
                 print(f"Noun: {noun} Verb: {verb}")
                 print(f"Part 2 Results {100 * noun + verb}")
                 break
-
-
-@pytest.fixture
-def computer():
-    return IntCodeComputer(
-        [1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50], input1=9, input2=10
-    )
-
-
-def test_operand(computer):
-    computer.run_opcode(0)
-    assert computer.memory == [1, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50]
-
-
-def test_program(computer):
-    computer.run_program()
-    assert computer.memory == [3500, 9, 10, 70, 2, 3, 11, 0, 99, 30, 40, 50]
