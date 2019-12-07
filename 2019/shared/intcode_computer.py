@@ -1,6 +1,8 @@
 import pytest
 from enum import Enum
 
+from time import sleep
+
 
 class MODE(Enum):
     POSITION = 0
@@ -8,7 +10,7 @@ class MODE(Enum):
 
 
 class IntCodeComputer:
-    def __init__(self, memory, pointer=0):
+    def __init__(self, memory=None, pointer=0):
         self._opcodes = {
             1: self.add,
             2: self.mul,
@@ -23,7 +25,8 @@ class IntCodeComputer:
         self.memory = memory
         self.pointer = pointer
         self.running = True
-        self.input_val = 1
+        self.input_register = []
+        self.output_register = []
 
     @property
     def opcodes(self):
@@ -50,10 +53,7 @@ class IntCodeComputer:
         return self.memory[self.pointer + 1 : self.pointer + 1 + num_of_args]
 
     def get_input(self):
-        return self.input_val
-
-    def set_input(self, value):
-        self.input_val = value
+        return self.input_register.pop(0)
 
     # OPCODE INSTRUCTIONS ------------------------------------
 
@@ -80,8 +80,9 @@ class IntCodeComputer:
     def output(self, arg_modes):
         """store a value from memory at the given address."""
         address = self.get_args(1)[0]
-        address = self.read(address, get_mode(arg_modes, 0))
-        print(address)
+        value = self.read(address, get_mode(arg_modes, 0))
+        self.output_register.append(value)
+        self.halt([])
         self.pointer += 2
 
     def jump_if_true(self, arg_modes):
@@ -127,8 +128,10 @@ class IntCodeComputer:
 
     # --------------------------------------------------------
 
-    def run(self):
+    def run(self, program=None):
         """Run the intCode Program until completion."""
+        if program:
+            self.memory = program
         while self.running:
             self.run_opcode(*self.decode_instruction(self.memory[self.pointer]))
 
@@ -151,6 +154,7 @@ def get_mode(arg_list, index, default=MODE.POSITION):
 @pytest.fixture
 def computer():
     comp = IntCodeComputer([1002, 4, 3, 4, 33])
+    comp.input_register = [1]
     return comp
 
 
@@ -181,10 +185,9 @@ def test_store(computer):
     assert computer.memory == [1002, 4, 3, 4, 1]
 
 
-def test_output(capsys, computer):
+def test_output(computer):
     computer.output([MODE.IMMEDIATE])
-    captured = capsys.readouterr()
-    assert "4" in captured.out
+    assert 4 in computer.output_register
 
 
 def test_halt(computer):
@@ -197,104 +200,100 @@ def test_simple_program(computer):
     assert computer.memory == [1002, 4, 3, 4, 99]
 
 
-def test_simple_program2(capsys, computer):
+def test_simple_program2(computer):
     computer.memory = [3, 0, 4, 0, 99]
     computer.run()
-    captured = capsys.readouterr()
-    assert "1" in captured.out
+    assert 1 in computer.output_register
 
 
-def test_compare_equal_pos_program(capsys, computer):
+def test_compare_equal_pos_program(computer):
     computer.memory = [3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8]
-    computer.set_input(8)
+    computer.input_register = [8]
     computer.run()
-    captured = capsys.readouterr()
-    assert "1" in captured.out
+    assert 1 in computer.output_register
 
 
-def test_compare_notequal_pos_program(capsys, computer):
+def test_compare_notequal_pos_program(computer):
     computer.memory = [3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8]
-    computer.set_input(2)
+    computer.input_register = [2]
     computer.run()
-    captured = capsys.readouterr()
-    assert "0" in captured.out
+    assert 0 in computer.output_register
 
 
-def test_compare_equal_immediate_program(capsys, computer):
+def test_compare_equal_immediate_program(computer):
     computer.memory = [3, 3, 1108, -1, 8, 3, 4, 3, 99]
-    computer.set_input(8)
+    computer.input_register = [8]
     computer.run()
-    captured = capsys.readouterr()
-    assert "1" in captured.out
+    assert 1 in computer.output_register
 
 
-def test_compare_notequal_immediate_program(capsys, computer):
+def test_compare_notequal_immediate_program(computer):
     computer.memory = [3, 3, 1108, -1, 8, 3, 4, 3, 99]
-    computer.set_input(2)
+    computer.input_register = [2]
     computer.run()
-    captured = capsys.readouterr()
-    assert "0" in captured.out
+    assert 0 in computer.output_register
 
 
-def test_compare_lessthan_pos_program(capsys, computer):
+def test_compare_lessthan_pos_program(computer):
     computer.memory = [3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8]
-    computer.set_input(2)
+    computer.input_register = [2]
     computer.run()
-    captured = capsys.readouterr()
-    assert "1" in captured.out
+    assert 1 in computer.output_register
 
 
-def test_compare_greaterthan_pos_program(capsys, computer):
+def test_compare_greaterthan_pos_program(computer):
     computer.memory = [3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8]
-    computer.set_input(9)
+    computer.input_register = [9]
     computer.run()
-    captured = capsys.readouterr()
-    assert "0" in captured.out
+    assert 0 in computer.output_register
 
 
-def test_compare_lessthan_immediate_program(capsys, computer):
+def test_compare_lessthan_immediate_program(computer):
     computer.memory = [3, 3, 1107, -1, 8, 3, 4, 3, 99]
-    computer.set_input(2)
+    computer.input_register = [2]
     computer.run()
-    captured = capsys.readouterr()
-    assert "1" in captured.out
+    assert 1 in computer.output_register
 
 
-def test_compare_greaterthan_immediate_program(capsys, computer):
+def test_compare_greaterthan_immediate_program(computer):
     computer.memory = [3, 3, 1107, -1, 8, 3, 4, 3, 99]
-    computer.set_input(9)
+    computer.input_register = [9]
     computer.run()
-    captured = capsys.readouterr()
-    assert "0" in captured.out
+    assert 0 in computer.output_register
 
 
-def test_jump_pos_program(capsys, computer):
+def test_jump_pos_program(computer):
     computer.memory = [3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9]
-    computer.set_input(0)
+    computer.input_register = [0]
     computer.run()
-    captured = capsys.readouterr()
-    assert "0" in captured.out
+    assert 0 in computer.output_register
 
 
-def test_jump_immediate_program(capsys, computer):
+def test_jump_immediate_program(computer):
     computer.memory = [3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1]
-    computer.set_input(0)
+    computer.input_register = [0]
     computer.run()
-    captured = capsys.readouterr()
-    assert "0" in captured.out
+    assert 0 in computer.output_register
 
 
-def test_jump_pos_program2(capsys, computer):
+def test_jump_pos_program2(computer):
     computer.memory = [3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9]
-    computer.set_input(1)
+    computer.input_register = [1]
     computer.run()
-    captured = capsys.readouterr()
-    assert "1" in captured.out
+    assert 1 in computer.output_register
 
 
-def test_jump_immediate_program2(capsys, computer):
+def test_jump_immediate_program2(computer):
     computer.memory = [3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1]
-    computer.set_input(1)
+    computer.input_register = [1]
     computer.run()
-    captured = capsys.readouterr()
-    assert "1" in captured.out
+    assert 1 in computer.output_register
+
+
+def test_multiple_input(computer):
+    computer.input_register = [1, 9]
+    computer.pointer = 1
+    computer.store([])
+    computer.pointer = 2
+    computer.store([])
+    assert computer.memory == [1002, 9, 3, 1, 33]

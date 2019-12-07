@@ -76,11 +76,7 @@ if __name__ == "__main__":
 
 
 def test_generate_path_and_steps():
-    assert generate_path_and_steps(["U3"]) == {
-        (0, 1): 1,
-        (0, 2): 2,
-        (0, 3): 3,
-    }
+    assert generate_path_and_steps(["U3"]) == {(0, 1): 1, (0, 2): 2, (0, 3): 3}
 
 
 def test_next_corridnate():
@@ -88,7 +84,7 @@ def test_next_corridnate():
 
 
 def test_corridnates():
-    assert corridnates({(0, 1): 1, (0, 2): 2, (0, 3): 3,}) == [(0, 1), (0, 2), (0, 3)]
+    assert corridnates({(0, 1): 1, (0, 2): 2, (0, 3): 3}) == [(0, 1), (0, 2), (0, 3)]
 
 
 def test_manhattan_distance():
