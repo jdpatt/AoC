@@ -1,7 +1,8 @@
 import pytest
 from enum import Enum
 
-from time import sleep
+import time
+import queue
 
 
 class MODE(Enum):
@@ -25,8 +26,8 @@ class IntCodeComputer:
         self.memory = memory
         self.pointer = pointer
         self.running = True
-        self.input_register = []
-        self.output_register = []
+        self.input_register = queue.Queue()
+        self.output_register = queue.Queue()
 
     @property
     def opcodes(self):
@@ -53,7 +54,7 @@ class IntCodeComputer:
         return self.memory[self.pointer + 1 : self.pointer + 1 + num_of_args]
 
     def get_input(self):
-        return self.input_register.pop(0)
+        return self.input_register.get(block=True)
 
     # OPCODE INSTRUCTIONS ------------------------------------
 
@@ -81,8 +82,7 @@ class IntCodeComputer:
         """store a value from memory at the given address."""
         address = self.get_args(1)[0]
         value = self.read(address, get_mode(arg_modes, 0))
-        self.output_register.append(value)
-        self.halt([])
+        self.output_register.put_nowait(value)
         self.pointer += 2
 
     def jump_if_true(self, arg_modes):
@@ -143,6 +143,12 @@ class IntCodeComputer:
     def write(self, address, value):
         self.memory[address] = value
 
+    def push(self, item):
+        self.input_register.put_nowait(item)
+
+    def pop(self):
+        return self.output_register.get_nowait()
+
 
 def get_mode(arg_list, index, default=MODE.POSITION):
     try:
@@ -154,7 +160,7 @@ def get_mode(arg_list, index, default=MODE.POSITION):
 @pytest.fixture
 def computer():
     comp = IntCodeComputer([1002, 4, 3, 4, 33])
-    comp.input_register = [1]
+    comp.input_register.put(1)
     return comp
 
 
@@ -187,7 +193,7 @@ def test_store(computer):
 
 def test_output(computer):
     computer.output([MODE.IMMEDIATE])
-    assert 4 in computer.output_register
+    assert 4 in list(computer.output_register.queue)
 
 
 def test_halt(computer):
@@ -203,95 +209,107 @@ def test_simple_program(computer):
 def test_simple_program2(computer):
     computer.memory = [3, 0, 4, 0, 99]
     computer.run()
-    assert 1 in computer.output_register
+    assert 1 in list(computer.output_register.queue)
 
 
 def test_compare_equal_pos_program(computer):
     computer.memory = [3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8]
-    computer.input_register = [8]
+    computer.input_register.queue.clear()
+    computer.input_register.put(8)
     computer.run()
-    assert 1 in computer.output_register
+    assert 1 in list(computer.output_register.queue)
 
 
 def test_compare_notequal_pos_program(computer):
     computer.memory = [3, 9, 8, 9, 10, 9, 4, 9, 99, -1, 8]
-    computer.input_register = [2]
+    computer.input_register.queue.clear()
+    computer.input_register.put(2)
     computer.run()
-    assert 0 in computer.output_register
+    assert 0 in list(computer.output_register.queue)
 
 
 def test_compare_equal_immediate_program(computer):
     computer.memory = [3, 3, 1108, -1, 8, 3, 4, 3, 99]
-    computer.input_register = [8]
+    computer.input_register.queue.clear()
+    computer.input_register.put(8)
     computer.run()
-    assert 1 in computer.output_register
+    assert 1 in list(computer.output_register.queue)
 
 
 def test_compare_notequal_immediate_program(computer):
     computer.memory = [3, 3, 1108, -1, 8, 3, 4, 3, 99]
-    computer.input_register = [2]
+    computer.input_register.queue.clear()
+    computer.input_register.put(2)
     computer.run()
-    assert 0 in computer.output_register
+    assert 0 in list(computer.output_register.queue)
 
 
 def test_compare_lessthan_pos_program(computer):
     computer.memory = [3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8]
-    computer.input_register = [2]
+    computer.input_register.queue.clear()
+    computer.input_register.put(2)
     computer.run()
-    assert 1 in computer.output_register
+    assert 1 in list(computer.output_register.queue)
 
 
 def test_compare_greaterthan_pos_program(computer):
     computer.memory = [3, 9, 7, 9, 10, 9, 4, 9, 99, -1, 8]
-    computer.input_register = [9]
+    computer.input_register.queue.clear()
+    computer.input_register.put(9)
     computer.run()
-    assert 0 in computer.output_register
+    assert 0 in list(computer.output_register.queue)
 
 
 def test_compare_lessthan_immediate_program(computer):
     computer.memory = [3, 3, 1107, -1, 8, 3, 4, 3, 99]
-    computer.input_register = [2]
+    computer.input_register.queue.clear()
+    computer.input_register.put(2)
     computer.run()
-    assert 1 in computer.output_register
+    assert 1 in list(computer.output_register.queue)
 
 
 def test_compare_greaterthan_immediate_program(computer):
     computer.memory = [3, 3, 1107, -1, 8, 3, 4, 3, 99]
-    computer.input_register = [9]
+    computer.input_register.queue.clear()
+    computer.input_register.put(9)
     computer.run()
-    assert 0 in computer.output_register
+    assert 0 in list(computer.output_register.queue)
 
 
 def test_jump_pos_program(computer):
     computer.memory = [3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9]
-    computer.input_register = [0]
+    computer.input_register.queue.clear()
+    computer.input_register.put(0)
     computer.run()
-    assert 0 in computer.output_register
+    assert 0 in list(computer.output_register.queue)
 
 
 def test_jump_immediate_program(computer):
     computer.memory = [3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1]
-    computer.input_register = [0]
+    computer.input_register.queue.clear()
+    computer.input_register.put(0)
     computer.run()
-    assert 0 in computer.output_register
+    assert 0 in list(computer.output_register.queue)
 
 
 def test_jump_pos_program2(computer):
     computer.memory = [3, 12, 6, 12, 15, 1, 13, 14, 13, 4, 13, 99, -1, 0, 1, 9]
-    computer.input_register = [1]
+    computer.input_register.put(1)
     computer.run()
-    assert 1 in computer.output_register
+    assert 1 in list(computer.output_register.queue)
 
 
 def test_jump_immediate_program2(computer):
     computer.memory = [3, 3, 1105, -1, 9, 1101, 0, 0, 12, 4, 12, 99, 1]
-    computer.input_register = [1]
+    computer.input_register.put(1)
     computer.run()
-    assert 1 in computer.output_register
+    assert 1 in list(computer.output_register.queue)
 
 
 def test_multiple_input(computer):
-    computer.input_register = [1, 9]
+    computer.input_register.queue.clear()
+    computer.input_register.put(1)
+    computer.input_register.put(9)
     computer.pointer = 1
     computer.store([])
     computer.pointer = 2
