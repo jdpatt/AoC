@@ -8,10 +8,11 @@ import queue
 class MODE(Enum):
     POSITION = 0
     IMMEDIATE = 1
+    RELATIVE = 2
 
 
 class IntCodeComputer:
-    def __init__(self, memory=None, pointer=0):
+    def __init__(self, program=None, pointer=0):
         self._opcodes = {
             1: self.add,
             2: self.mul,
@@ -21,17 +22,21 @@ class IntCodeComputer:
             6: self.jump_if_false,
             7: self.less_than,
             8: self.equals,
+            9: self.adjust_relative_base,
             99: self.halt,
         }
-        self.memory = memory
+        self.memory = [0] * 1048576  # Arbitrary Memory Size
+        if program:
+            self.put_program_in_memory(program, 0)
         self.pointer = pointer
+        self.relative_base = 0
         self.running = True
         self.input_register = queue.Queue()
         self.output_register = queue.Queue()
 
-    @property
-    def opcodes(self):
-        return self._opcodes
+    def put_program_in_memory(self, program, offset=0):
+        for index, instruction in enumerate(program):
+            self.memory[offset + index] = instruction
 
     def decode_instruction(self, instruction):
         """Decode the current instruction"""
@@ -42,13 +47,15 @@ class IntCodeComputer:
         for character in modes[::-1]:
             if character == "1":
                 argument_modes.append(MODE.IMMEDIATE)
+            elif character == "2":
+                argument_modes.append(MODE.RELATIVE)
             else:
                 argument_modes.append(MODE.POSITION)
         return int(opcode), argument_modes
 
     def run_opcode(self, opcode, arg_modes):
         """Run the individual command updating the results in the memory."""
-        self.opcodes[opcode](arg_modes)
+        self._opcodes[opcode](arg_modes)
 
     def get_args(self, num_of_args=1):
         return self.memory[self.pointer + 1 : self.pointer + 1 + num_of_args]
@@ -62,20 +69,20 @@ class IntCodeComputer:
         a, b, output = self.get_args(3)
         a = self.read(a, get_mode(arg_modes, 0))
         b = self.read(b, get_mode(arg_modes, 1))
-        self.write(output, a + b)
+        self.write(output, a + b, get_mode(arg_modes, 2))
         self.pointer += 4
 
     def mul(self, arg_modes):
         a, b, output = self.get_args(3)
         a = self.read(a, get_mode(arg_modes, 0))
         b = self.read(b, get_mode(arg_modes, 1))
-        self.write(output, a * b)
+        self.write(output, a * b, get_mode(arg_modes, 2))
         self.pointer += 4
 
     def store(self, arg_modes):
         """Store a new value in memory at the given address."""
         address = self.get_args(1)[0]
-        self.memory[address] = self.get_input()
+        self.write(address, self.get_input(), get_mode(arg_modes, 0))
         self.pointer += 2
 
     def output(self, arg_modes):
@@ -108,9 +115,9 @@ class IntCodeComputer:
         first = self.read(first, get_mode(arg_modes, 0))
         second = self.read(second, get_mode(arg_modes, 1))
         if first < second:
-            self.write(output, 1)
+            self.write(output, 1, get_mode(arg_modes, 2))
         else:
-            self.write(output, 0)
+            self.write(output, 0, get_mode(arg_modes, 2))
         self.pointer += 4
 
     def equals(self, arg_modes):
@@ -118,13 +125,19 @@ class IntCodeComputer:
         first = self.read(first, get_mode(arg_modes, 0))
         second = self.read(second, get_mode(arg_modes, 1))
         if first == second:
-            self.write(output, 1)
+            self.write(output, 1, get_mode(arg_modes, 2))
         else:
-            self.write(output, 0)
+            self.write(output, 0, get_mode(arg_modes, 2))
         self.pointer += 4
 
     def halt(self, arg_modes):
         self.running = False
+
+    def adjust_relative_base(self, arg_modes):
+        address = self.get_args(1)[0]
+        value = self.read(address, get_mode(arg_modes, 0))
+        self.relative_base += value
+        self.pointer += 2
 
     # --------------------------------------------------------
 
@@ -138,16 +151,31 @@ class IntCodeComputer:
     def read(self, address, mode=MODE.POSITION):
         if mode == MODE.POSITION:
             return self.memory[address]
+        elif mode == MODE.RELATIVE:
+            return self.memory[address + self.relative_base]
         return address
 
-    def write(self, address, value):
-        self.memory[address] = value
+    def write(self, address, value, mode=MODE.POSITION):
+        if mode == MODE.POSITION:
+            self.memory[address] = value
+        elif mode == MODE.RELATIVE:
+            self.memory[address + self.relative_base] = value
 
     def push(self, item):
         self.input_register.put_nowait(item)
 
     def pop(self):
         return self.output_register.get_nowait()
+
+    def output_results(self):
+        results = []
+        while not self.output_register.empty():
+            try:
+                results.append(self.output_register.get(block=False))
+            except queue.Empty:
+                continue
+            self.output_register.task_done()
+        return results
 
 
 def get_mode(arg_list, index, default=MODE.POSITION):
@@ -199,6 +227,13 @@ def test_output(computer):
 def test_halt(computer):
     computer.halt([])
     assert not computer.running
+
+
+def test_adjust_relative_base(computer):
+    computer.memory = [109, 19, 99]
+    computer.relative_base = 2000
+    computer.run()
+    assert computer.relative_base == 2019
 
 
 def test_simple_program(computer):
