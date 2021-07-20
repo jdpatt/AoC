@@ -1,3 +1,13 @@
+# Ignore all
+*
+
+# Unignore all with extensions
+!*.*
+
+# Unignore all dirs
+!*/
+
+*.dSYM/
 __pycache__/
 output.txt
 .mypy_cache/
@@ -5,4 +15,4 @@ output.txt
 .pytest_cache/
 .vscode/
 *.code-workspace
-*.dSYM/
+.DS_Store
