@@ -13,6 +13,5 @@ output.txt
 .mypy_cache/
 .venv/
 .pytest_cache/
-.vscode/
 *.code-workspace
 .DS_Store
