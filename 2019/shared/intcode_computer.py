@@ -1,8 +1,8 @@
-import pytest
+import queue
+import time
 from enum import Enum
 
-import time
-import queue
+import pytest
 
 
 class MODE(Enum):

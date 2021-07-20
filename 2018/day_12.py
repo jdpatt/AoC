@@ -1,5 +1,5 @@
 """Advent of Code 2018 Day 12"""
-from typing import Sequence, Dict
+from typing import Dict, Sequence
 
 from shared.common import get_puzzle_input
 

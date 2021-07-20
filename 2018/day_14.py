@@ -1,6 +1,5 @@
 """Advent of Code 2018 Day 14"""
 import pytest
-
 from shared.common import get_puzzle_input
 
 

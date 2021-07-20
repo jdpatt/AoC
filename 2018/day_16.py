@@ -5,9 +5,9 @@ from itertools import cycle
 from shared.common import get_puzzle_input
 from shared.device import Device
 from shared.transforms import (
-    transform_register_string,
-    transform_program,
     transform_operation,
+    transform_program,
+    transform_register_string,
 )
 
 

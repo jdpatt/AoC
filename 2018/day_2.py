@@ -1,7 +1,7 @@
 """Advent of Code 2018 Day 2"""
 from collections import defaultdict
 from difflib import SequenceMatcher
-from typing import Sequence, Dict
+from typing import Dict, Sequence
 
 
 def has_repeating_characters(characters: Dict, num_repeating: int):

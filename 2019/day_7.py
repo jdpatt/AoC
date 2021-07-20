@@ -1,12 +1,12 @@
 """Advent of Code 2019 Day 7"""
+import queue
+import threading
 from itertools import permutations
 from time import sleep
-import threading
-import queue
-from shared.common import get_input
-from shared.intcode_computer import IntCodeComputer
 
 import pytest
+from shared.common import get_input
+from shared.intcode_computer import IntCodeComputer
 
 
 class Amplifier:

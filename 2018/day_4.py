@@ -1,7 +1,7 @@
 """Advent of Code 2018 Day 4"""
-from collections import defaultdict, Counter
-from datetime import datetime
 import operator
+from collections import Counter, defaultdict
+from datetime import datetime
 from re import search
 from statistics import mode
 

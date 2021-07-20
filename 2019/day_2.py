@@ -2,7 +2,6 @@
 from shared.common import get_and_transform_input
 from shared.intcode_computer import IntCodeComputer
 
-
 if __name__ == "__main__":
     PROGRAM = [int(x) for x in get_and_transform_input("input2.txt")[0].split(",")]
     MEMORY = {index: item for index, item in enumerate(PROGRAM)}

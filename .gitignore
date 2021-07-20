@@ -5,3 +5,4 @@ output.txt
 .pytest_cache/
 .vscode/
 *.code-workspace
+*.dSYM/

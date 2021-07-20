@@ -1,5 +1,6 @@
 """Advent of Code 2019 Day 8"""
 import re
+
 from shared.common import get_input
 
 

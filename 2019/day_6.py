@@ -1,7 +1,6 @@
 """Advent of Code 2019 Day 6"""
-from shared.common import get_and_transform_input
-
 import pytest
+from shared.common import get_and_transform_input
 
 
 def path(orbit_map, item):

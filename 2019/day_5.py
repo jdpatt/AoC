@@ -3,7 +3,6 @@
 from shared.common import get_input
 from shared.intcode_computer import IntCodeComputer
 
-
 if __name__ == "__main__":
     PUZZLE = [int(x) for x in get_input("input5.txt").split(",")]
     SHIP_ID = 1

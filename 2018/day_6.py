@@ -1,6 +1,6 @@
 """Advent of Code 2018 Day 6"""
-from itertools import chain
 from collections import Counter
+from itertools import chain
 
 from shared.common import get_puzzle_input
 
@@ -25,7 +25,7 @@ def get_largest(grid, points):
 def get_nearest_point(location, points):
     """Find out who is closest.
 
-       If the distance is zero; we are at a point.  If it equals someone else, it's disqualified.
+    If the distance is zero; we are at a point.  If it equals someone else, it's disqualified.
     """
     distance = 10000
     total_distance = 0
