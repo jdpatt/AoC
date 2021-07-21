@@ -1,8 +1,8 @@
 .PHONY: format
 
 format:
-	black .
-	isort --profile black .
+	black ./2020/
+	isort --profile black ./2020/
 	astyle --indent=spaces=4 --style=allman --indent-labels --indent-preprocessor --indent-col1-comments \
 		--max-instatement-indent=60 --min-conditional-indent=0 --pad-oper --unpad-paren --pad-paren-in \
 		--break-closing-brackets --add-brackets --keep-one-line-blocks --keep-one-line-statements \
