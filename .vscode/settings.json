@@ -4,5 +4,11 @@
         "iterator": "cpp",
         "iosfwd": "cpp",
         "iostream": "cpp"
-    }
+    },
+    "python.testing.pytestArgs": [
+        "2020",
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.pytestEnabled": true
 }

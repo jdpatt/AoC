@@ -36,7 +36,6 @@ int main()
         product *= item;
     }
     std::cout << "Part 2: Tree Count: " << product << std::endl;
-    return 0;
 }
 
 /**
