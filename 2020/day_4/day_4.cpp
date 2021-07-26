@@ -58,5 +58,9 @@ std::vector<std::string> read_in_batch_file( const std::string filename )
         }
 
     }
+    if( !passport.empty() )
+    {
+        passports.push_back( passport );
+    }
     return passports;
 }
