@@ -8,6 +8,7 @@ def get_seat_id(row: int, column: int):
 
 
 def down_select_seats(iterable: List[int], character: str):
+    """If the character is F or L, return the lower half of the list."""
     if character == "F" or character == "L":
         return iterable[: len(iterable) // 2]
     return iterable[len(iterable) // 2 :]

@@ -3,7 +3,8 @@
         "initializer_list": "cpp",
         "iterator": "cpp",
         "iosfwd": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "algorithm": "cpp"
     },
     "python.testing.pytestArgs": [
         "2020",
