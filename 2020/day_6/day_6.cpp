@@ -1,4 +1,3 @@
-// std::set<std::string> a;
 #include <algorithm>
 #include <iostream>
 #include <iterator>
