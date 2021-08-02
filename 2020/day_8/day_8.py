@@ -45,7 +45,7 @@ def run_program(instructions) -> Tuple[int, int]:
                 raise BootCodeError("Unhandled Operation")
             instruction["executed"] = True
         except IndexError:
-            print(f"Program Completed...\t{accumulator=}")
+            print(f"Program Completed...\t{accumulator=}")  # 2060
             return 0, accumulator
 
 
