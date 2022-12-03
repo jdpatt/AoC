@@ -69,26 +69,27 @@ def score_round_by_outcome(opponent: Move, outcome: Outcomes):
     return Score[outcome.name] + score_of_winning_move(opponent, outcome)
 
 
-#! Open and read in the puzzle. ----------------------------------------------
-with open("./day_02_input.txt") as puzzle_input:
-    # Store every round into a dictionary of their move and my move.
-    strategy_guide = [
-        [moves[0], moves[1]] for moves in (line.strip().split(" ") for line in puzzle_input)
+if __name__ == "__main__":
+
+    #! Open and read in the puzzle. ----------------------------------------------
+    with open("./day_02_input.txt") as puzzle_input:
+        # Store every round into a dictionary of their move and my move.
+        strategy_guide = [
+            [moves[0], moves[1]] for moves in (line.strip().split(" ") for line in puzzle_input)
+        ]
+
+    # ? Part 1  ----------------------------------------------
+    scores_by_move = [
+        score_round_by_move(Moves.get(opponent), Moves.get(my_move))
+        for opponent, my_move in strategy_guide
     ]
 
+    # * Part 2  ----------------------------------------------
+    scores_by_outcome = [
+        score_round_by_outcome(Moves.get(opponent), Outcomes.get(outcome))
+        for opponent, outcome in strategy_guide
+    ]
 
-# ? Part 1  ----------------------------------------------
-scores_by_move = [
-    score_round_by_move(Moves.get(opponent), Moves.get(my_move))
-    for opponent, my_move in strategy_guide
-]
-
-# * Part 2  ----------------------------------------------
-scores_by_outcome = [
-    score_round_by_outcome(Moves.get(opponent), Outcomes.get(outcome))
-    for opponent, outcome in strategy_guide
-]
-
-# Sum and print the total
-print(f"Total Score by Move: {sum(scores_by_move)}")
-print(f"Total Score by Outcome: {sum(scores_by_outcome)}")
+    # Sum and print the total
+    print(f"Total Score by Move: {sum(scores_by_move)}")
+    print(f"Total Score by Outcome: {sum(scores_by_outcome)}")
