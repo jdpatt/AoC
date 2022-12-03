@@ -1,7 +1,7 @@
 """Day 1 AoC 2022"""
 from itertools import groupby
 
-with open("day_01_input.txt") as puzzle_input:
+with open("./day_01_input.txt") as puzzle_input:
     all_elves_calories = [
         # convert all the string numbers to ints
         list(map(int, group))
