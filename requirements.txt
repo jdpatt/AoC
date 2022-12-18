@@ -1,0 +1,9 @@
+# Developer tooling
+black
+isort
+pytest
+pytest-cov
+pylint
+pre-commit
+mypy
+invoke
