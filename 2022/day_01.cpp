@@ -16,7 +16,7 @@ int main(void)
     std::string line_in_file;
     while (std::getline(infile, line_in_file))
     {
-        if (line_in_file == "")
+        if (line_in_file.empty())
         {
             elves.push_back(current_calories);
             current_calories = 0;
