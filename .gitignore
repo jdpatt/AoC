@@ -161,3 +161,5 @@ cython_debug/
 # Other
 .vscode/
 example.txt
+*.ilk
+*.pdb
