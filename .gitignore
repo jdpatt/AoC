@@ -163,3 +163,8 @@ cython_debug/
 example.txt
 *.ilk
 *.pdb
+
+
+*
+!*/
+!*.*
